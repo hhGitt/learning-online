@@ -9,6 +9,7 @@ import com.learning.content.model.po.CourseBase;
 import com.learning.base.model.PageParams;
 import com.learning.base.model.PageResult;
 import com.learning.content.service.CourseBaseInfoService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
  * @description TODO
  * @date 2023/6/29 11:50
  **/
-@ApiOperation(value = "课程信息管理接口", tags = "课程信息管理接口")
+@Api(value = "课程信息管理接口", tags = "课程信息管理接口")
 @RestController
 public class CourseBaseInfoController {
 
@@ -55,5 +56,11 @@ public class CourseBaseInfoController {
         Long companyId = 1232141425L;
         CourseBaseInfoDto courseBaseInfoDto = courseBaseInfoService.updateCourseBase(companyId, editCourseDto);
         return courseBaseInfoDto;
+    }
+
+    @ApiOperation("删除课程")
+    @DeleteMapping("/course/{courseId}")
+    public void deleteCourseBase(@PathVariable Long courseId) {
+        courseBaseInfoService.removeCourseBase(courseId);
     }
 }

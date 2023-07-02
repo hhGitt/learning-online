@@ -5,16 +5,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.learning.base.execption.LearningOnlineException;
 import com.learning.base.model.PageParams;
 import com.learning.base.model.PageResult;
-import com.learning.content.mapper.CourseBaseMapper;
-import com.learning.content.mapper.CourseCategoryMapper;
-import com.learning.content.mapper.CourseMarketMapper;
+import com.learning.content.mapper.*;
 import com.learning.content.model.dto.AddCourseDto;
 import com.learning.content.model.dto.CourseBaseInfoDto;
 import com.learning.content.model.dto.EditCourseDto;
 import com.learning.content.model.dto.QueryCourseParamsDto;
-import com.learning.content.model.po.CourseBase;
-import com.learning.content.model.po.CourseCategory;
-import com.learning.content.model.po.CourseMarket;
+import com.learning.content.model.po.*;
 import com.learning.content.service.CourseBaseInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -41,6 +37,13 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
     CourseMarketMapper courseMarketMapper;
     @Autowired
     CourseCategoryMapper courseCategoryMapper;
+    @Autowired
+    CourseTeacherMapper courseTeacherMapper;
+    @Autowired
+    TeachplanMapper teachplanMapper;
+    @Autowired
+    TeachplanMediaMapper teachplanMediaMapper;
+
 
     @Override
     public PageResult<CourseBase> queryCourseBaseList(PageParams pageParams, QueryCourseParamsDto courseParamsDto) {
@@ -85,7 +88,10 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         BeanUtils.copyProperties(addCourseDto, courseMarketNew);
         Long id = courseBaseNew.getId();
         courseMarketNew.setId(id);
-        saveCourseMarket(courseMarketNew);
+        int courseMarketInsert = saveCourseMarket(courseMarketNew);
+        if (courseMarketInsert <= 0) {
+            throw new LearningOnlineException("添加课程营销信息失败");
+        }
         CourseBaseInfoDto courseBaseInfo = getCourseById(id);
         return courseBaseInfo;
     }
@@ -147,6 +153,29 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         }
         CourseBaseInfoDto courseById = getCourseById(courseId);
         return courseById;
+    }
+
+    @Transactional
+    @Override
+    public void removeCourseBase(Long courseId) {
+        // 删除 课程基本信息、课程营销信息、课程计划、课程计划关联信息、课程师资
+        // 删除课程基本信息
+        courseBaseMapper.deleteById(courseId);
+        // 删除课程营销信息
+        courseMarketMapper.deleteById(courseId);
+        // 删除课程计划
+        LambdaQueryWrapper<Teachplan> teachplanLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        teachplanLambdaQueryWrapper.eq(Teachplan::getCourseId, courseId);
+        teachplanMapper.delete(teachplanLambdaQueryWrapper);
+        // 删除课程计划关联信息
+        LambdaQueryWrapper<TeachplanMedia> teachplanMediaLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        teachplanMediaLambdaQueryWrapper.eq(TeachplanMedia::getCourseId, courseId);
+        teachplanMediaMapper.delete(teachplanMediaLambdaQueryWrapper);
+        // 删除课程work管联信息(未开发)
+        // 删除课程师资
+        LambdaQueryWrapper<CourseTeacher> courseTeacherLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        courseTeacherLambdaQueryWrapper.eq(CourseTeacher::getCourseId, courseId);
+        courseTeacherMapper.delete(courseTeacherLambdaQueryWrapper);
     }
 
     // 单独写一个方法保存营销信息，逻辑，存在则更新，不在则添加

@@ -2,6 +2,7 @@ package com.learning.content.api;
 
 import com.learning.content.model.dto.SaveTeachPlanDto;
 import com.learning.content.model.dto.TeachPlanDto;
+import com.learning.content.model.enums.MoveDirectionEnum;
 import com.learning.content.service.TeachPlanService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -39,5 +40,18 @@ public class TeachPlanController {
     @PostMapping("/teachplan")
     public void saveTeachPlan(@RequestBody SaveTeachPlanDto saveTeachPlanDto) {
         teachPlanService.saveTeachPlan(saveTeachPlanDto);
+    }
+
+    @ApiOperation("删除课程计划")
+    @DeleteMapping("/teachplan/{teachPlanId}")
+    public void deleteTeachPlan(@PathVariable Long teachPlanId) {
+        teachPlanService.removeTeachPlan(teachPlanId);
+    }
+
+    @ApiOperation("移动课程计划位置")
+    @PostMapping("/teachplan/{moveDirection}/{teachPlanId}")
+    public void moveTeachPlan(@PathVariable String moveDirection, @PathVariable Long teachPlanId) {
+        int step = MoveDirectionEnum.MoveDirectionEnumOf(moveDirection);
+        teachPlanService.moveTeachPlan(step,teachPlanId);
     }
 }
