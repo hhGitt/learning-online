@@ -1,15 +1,11 @@
 package com.learning.content.api;
 
-import com.learning.content.model.dto.CourseTeacherDto;
-import com.learning.content.model.dto.EditCourseTeacherDto;
 import com.learning.content.model.po.CourseTeacher;
 import com.learning.content.service.CourseTeacherService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,16 +30,10 @@ public class CourseTeacherController {
         return courseTeacherService.queryCourseTeacherList(courseId);
     }
 
-    @ApiOperation(value = "添加课程对应老师信息", tags = "添加课程对应老师信息")
+    @ApiOperation(value = "添加或修改课程对应老师信息", tags = "添加或修改课程对应老师信息")
     @PostMapping("/courseTeacher")
-    public CourseTeacher saveCourseTeacher(@RequestBody CourseTeacherDto courseTeacherDto) {
-        return courseTeacherService.createCourseTeacher(courseTeacherDto);
-    }
-
-    @ApiOperation(value = "修改课程对应老师信息", tags = "修改课程对应老师信息")
-    @PutMapping("/courseTeacher")
-    public CourseTeacher updateCourseTeacher(@RequestBody EditCourseTeacherDto editCourseTeacherDto) {
-        return courseTeacherService.updateCourseTeacher(editCourseTeacherDto);
+    public CourseTeacher saveCourseTeacher(@RequestBody CourseTeacher courseTeacher) {
+        return courseTeacherService.createCourseTeacher(courseTeacher);
     }
 
     @ApiOperation(value = "删除课程对应老师信息", tags = "删除课程对应老师信息")

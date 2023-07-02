@@ -4,9 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.learning.base.execption.LearningOnlineException;
 import com.learning.content.mapper.CourseBaseMapper;
 import com.learning.content.mapper.CourseTeacherMapper;
-import com.learning.content.mapper.TeachplanMapper;
-import com.learning.content.model.dto.CourseTeacherDto;
-import com.learning.content.model.dto.EditCourseTeacherDto;
 import com.learning.content.model.po.CourseBase;
 import com.learning.content.model.po.CourseTeacher;
 import com.learning.content.service.CourseTeacherService;
@@ -41,32 +38,30 @@ public class CourseTeacherServiceImpl implements CourseTeacherService {
     }
 
     @Override
-    public CourseTeacher createCourseTeacher(CourseTeacherDto courseTeacherDto) {
+    public CourseTeacher createCourseTeacher(CourseTeacher courseTeacherDto) {
         // 查询是否存在课程
         CourseBase courseBase = courseBaseMapper.selectById(courseTeacherDto.getCourseId());
         if (courseBase == null) {
             throw new LearningOnlineException("该课程不存在");
         }
-        CourseTeacher courseTeacher = new CourseTeacher();
-        BeanUtils.copyProperties(courseTeacherDto, courseTeacher);
-        courseTeacher.setCreateDate(LocalDateTime.now());
-        int insert = courseTeacherMapper.insert(courseTeacher);
-        if (insert <= 0) {
-            throw new LearningOnlineException("添加教师信息失败");
-        }
-        return courseTeacher;
-    }
-
-    @Override
-    public CourseTeacher updateCourseTeacher(EditCourseTeacherDto editCourseTeacherDto) {
         // 查询该教师消息是否存在
-        CourseTeacher courseTeacher = courseTeacherMapper.selectById(editCourseTeacherDto.getId());
+        CourseTeacher courseTeacher = courseTeacherMapper.selectById(courseTeacherDto.getId());
         if (courseTeacher == null) {
-            throw new LearningOnlineException("该教师消息不存在");
+            courseTeacher = new CourseTeacher();
+            BeanUtils.copyProperties(courseTeacherDto, courseTeacher);
+            courseTeacher.setCreateDate(LocalDateTime.now());
+            int insert = courseTeacherMapper.insert(courseTeacher);
+            if (insert <= 0) {
+                throw new LearningOnlineException("添加教师信息失败");
+            }
+        } else {
+            BeanUtils.copyProperties(courseTeacherDto, courseTeacher);
+            courseTeacher.setCreateDate(LocalDateTime.now());
+            int updateById = courseTeacherMapper.updateById(courseTeacher);
+            if (updateById <= 0) {
+                throw new LearningOnlineException("更新教师信息失败");
+            }
         }
-        BeanUtils.copyProperties(editCourseTeacherDto, courseTeacher);
-        courseTeacher.setCreateDate(LocalDateTime.now());
-        courseTeacherMapper.updateById(courseTeacher);
         return courseTeacher;
     }
 

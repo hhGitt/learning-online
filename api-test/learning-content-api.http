@@ -105,20 +105,23 @@ POST {{content_host}}/content/courseTeacher
 Content-Type: application/json
 
 {
-  "courseId": 133,
-  "teacherName": "王老师",
+  "id": null,
+  "courseId": 75,
+  "teacherName": "王老师哈哈",
   "position": "教师职位",
-  "introduction": "教师简介"
+  "introduction": "教师简介",
+  "photograph": null,
+  "createDate": null
 }
 
 ### 修改课程对应老师信息
-PUT {{content_host}}/content/courseTeacher
+POST {{content_host}}/content/courseTeacher
 Content-Type: application/json
 
 {
-  "id": 22,
+  "id": 37,
   "courseId": 75,
-  "teacherName": "王老师哈哈哈哈哈",
+  "teacherName": "王老师ppp",
   "position": "教师职位",
   "introduction": "教师简介",
   "photograph": null,

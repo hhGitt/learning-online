@@ -1,8 +1,10 @@
 package com.learning.content.model.po;
 
 import com.baomidou.mybatisplus.annotation.*;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -19,40 +21,27 @@ public class CourseTeacher implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 主键
-     */
+    @ApiModelProperty(value = "教师id")
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    /**
-     * 课程标识
-     */
+    @NotEmpty(message = "课程id不能为空")
+    @ApiModelProperty(value = "课程id",required = true)
     private Long courseId;
 
-    /**
-     * 教师标识
-     */
+    @ApiModelProperty(value = "教师姓名")
     private String teacherName;
 
-    /**
-     * 教师职位
-     */
+    @ApiModelProperty(value = "教师职位")
     private String position;
 
-    /**
-     * 教师简介
-     */
+    @ApiModelProperty(value = "教师简介")
     private String introduction;
 
-    /**
-     * 照片
-     */
+    @ApiModelProperty(value = "照片信息")
     private String photograph;
 
-    /**
-     * 创建时间
-     */
+    @ApiModelProperty(value = "创建时间")
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createDate;
 
