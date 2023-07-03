@@ -9,6 +9,13 @@
     </parent>
     <artifactId>learning-online-content-service</artifactId>
     <dependencies>
+
+        <!-- nacos服务配置 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>com.learning</groupId>
             <artifactId>learning-online-content-model</artifactId>

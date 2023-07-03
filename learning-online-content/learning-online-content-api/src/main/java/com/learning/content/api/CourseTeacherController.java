@@ -24,19 +24,19 @@ public class CourseTeacherController {
     @Autowired
     CourseTeacherService courseTeacherService;
 
-    @ApiOperation(value = "查询课程对应老师信息", tags = "查询课程对应老师信息")
+    @ApiOperation(value = "查询课程对应老师信息")
     @GetMapping("/courseTeacher/list/{courseId}")
     public List<CourseTeacher> list(@PathVariable Long courseId) {
         return courseTeacherService.queryCourseTeacherList(courseId);
     }
 
-    @ApiOperation(value = "添加或修改课程对应老师信息", tags = "添加或修改课程对应老师信息")
+    @ApiOperation(value = "添加或修改课程对应老师信息")
     @PostMapping("/courseTeacher")
     public CourseTeacher saveCourseTeacher(@RequestBody CourseTeacher courseTeacher) {
         return courseTeacherService.createCourseTeacher(courseTeacher);
     }
 
-    @ApiOperation(value = "删除课程对应老师信息", tags = "删除课程对应老师信息")
+    @ApiOperation(value = "删除课程对应老师信息")
     @DeleteMapping("/courseTeacher/course/{courseId}/{courseTeacherId}")
     public void deleteCourseTeacher(@PathVariable Long courseId, @PathVariable Long courseTeacherId) {
         courseTeacherService.removeCourseTeacher(courseId, courseTeacherId);

@@ -1,6 +1,6 @@
 spring:
   application:
-    name: system-api # 服务名
+    name: content-service # 服务名
   profiles:
     active: dev  # 环境名
   cloud:
@@ -14,14 +14,7 @@ spring:
         group: learning-online-project
         file-extension: yaml
         refresh-enabled: true
-        extension-configs:  # 特有
-          - data-id: system-service-${spring.profiles.active}.yaml
-            group: learning-online-project
-            refresh: true
         shared-configs:  # 公共
-          - data-id: swagger-${spring.profiles.active}.yaml
-            group: learning-online-common
-            refresh: true
           - data-id: logging-${spring.profiles.active}.yaml
             group: learning-online-common
             refresh: true
