@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: gateway
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      server-addr: 192.168.181.135:8848
+      discovery:
+        namespace: learning_dev
+        group: learning-online-project
+      config:
+        namespace: learning_dev
+        group: learning-online-project
+        file-extension: yaml
+        refresh-enabled: true
+        shared-configs:
+          - data-id: logging-${spring.profiles.active}.yaml
+            group: learning-plus-common
+            refresh: true
+
+
