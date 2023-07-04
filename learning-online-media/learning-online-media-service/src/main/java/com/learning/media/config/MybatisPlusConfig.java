@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
  * </p>
  */
 @Configuration
-@MapperScan("com.xuecheng.media.mapper")
+@MapperScan("com.learning.media.mapper")
 public class MybatisPlusConfig {
 	/**
 	 * 新的分页插件
