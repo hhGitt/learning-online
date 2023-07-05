@@ -7,8 +7,10 @@ import com.j256.simplemagic.ContentInfoUtil;
 import com.learning.base.execption.LearningOnlineException;
 import com.learning.base.model.RestResponse;
 import com.learning.media.mapper.MediaFilesMapper;
+import com.learning.media.mapper.MediaProcessMapper;
 import com.learning.media.model.dto.UploadFileParamsDto;
 import com.learning.media.model.dto.UploadFileResultDto;
+import com.learning.media.model.po.MediaProcess;
 import com.learning.media.service.MediaFileService;
 import com.learning.base.model.PageParams;
 import com.learning.base.model.PageResult;
@@ -55,6 +57,9 @@ public class MediaFileServiceImpl implements MediaFileService {
 
     @Autowired
     MediaFilesMapper mediaFilesMapper;
+
+    @Autowired
+    MediaProcessMapper mediaProcessMapper;
 
     @Autowired
     MinioClient minioClient;
@@ -148,6 +153,10 @@ public class MediaFileServiceImpl implements MediaFileService {
                 LearningOnlineException.cast("保存文件信息失败");
                 return null;
             }
+            // 记录待处理任务
+            // 判断avi视频写入待处理任务
+            // 向MediaProcess插入视频
+            addWaitingTask(mediaFiles);
         }
         return mediaFiles;
     }
@@ -241,7 +250,7 @@ public class MediaFileServiceImpl implements MediaFileService {
             return RestResponse.fail(false, "文件校验失败");
         }
         // 文件信息入库
-        MediaFiles mediaFiles = mediaFileServiceProxy.addMediaFilesToDb(companyId, fileMd5, uploadFileParamsDto, bucket_mediafiles, objectName);
+        MediaFiles mediaFiles = mediaFileServiceProxy.addMediaFilesToDb(companyId, fileMd5, uploadFileParamsDto, bucket_videofiles, objectName);
         if (mediaFiles == null) {
             return RestResponse.fail(false, "文件入库失败");
         }
@@ -270,16 +279,8 @@ public class MediaFileServiceImpl implements MediaFileService {
         return mimeType;
     }
 
-    /**
-     * 上传文件到minio
-     *
-     * @param localFilePath 文件本地路径
-     * @param mimeType      设置媒体文件类型
-     * @param bucket        桶
-     * @param objectName    对象名
-     * @return 上传状态
-     */
-    private boolean addMediaFilesToMinIO(String localFilePath, String mimeType, String bucket, String objectName) {
+    @Override
+    public boolean addMediaFilesToMinIO(String localFilePath, String mimeType, String bucket, String objectName) {
         try {
             UploadObjectArgs uploadObjectArgs = UploadObjectArgs.builder().bucket(bucket)
                     .filename(localFilePath)
@@ -329,17 +330,11 @@ public class MediaFileServiceImpl implements MediaFileService {
     }
 
     private String getFilePathByMd5(String fileMd5, String fileExt) {
-        return fileMd5.substring(0, 1) + "/" + fileMd5.substring(1, 2) +"/"+ fileMd5 + "/" + fileMd5 + fileExt;
+        return fileMd5.substring(0, 1) + "/" + fileMd5.substring(1, 2) + "/" + fileMd5 + "/" + fileMd5 + fileExt;
     }
 
-    /**
-     * 从minio下载文件
-     *
-     * @param bucket     桶
-     * @param objectName 对象名称
-     * @return 下载后的文件
-     */
-    private File downloadFileFromMinIO(String bucket, String objectName) {
+    @Override
+    public File downloadFileFromMinIO(String bucket, String objectName) {
         // 临时文件
         File minioFile = null;
         FileOutputStream outputStream = null;
@@ -387,4 +382,27 @@ public class MediaFileServiceImpl implements MediaFileService {
         });
     }
 
+    /**
+     * 添加待处理任务
+     *
+     * @param mediaFiles 媒体文件信息
+     */
+    private void addWaitingTask(MediaFiles mediaFiles) {
+        // 文件名称
+        String filename = mediaFiles.getFilename();
+        // 文件拓展名
+        String extension = filename.substring(filename.lastIndexOf("."));
+        // 获取文件mimeType
+        String mimeType = getMimeType(extension);
+        if (mimeType.equals("video/x-msvideo")) { // 如果是avi视频写入待处理任务
+            MediaProcess mediaProcess = new MediaProcess();
+            BeanUtils.copyProperties(mediaFiles, mediaProcess);
+            // 状态是未处理
+            mediaProcess.setStatus("1");
+            mediaProcess.setCreateDate(LocalDateTime.now());
+            mediaProcess.setFailCount(0);
+            mediaProcess.setUrl(null);
+            mediaProcessMapper.insert(mediaProcess);
+        }
+    }
 }
