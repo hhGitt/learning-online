@@ -1,6 +1,8 @@
 package com.learning.media.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.learning.media.mapper.MediaFilesMapper;
 import com.learning.media.mapper.MediaProcessHistoryMapper;
 import com.learning.media.mapper.MediaProcessMapper;
@@ -56,13 +58,13 @@ public class MediaFileProcessServiceImpl implements MediaFileProcessService {
         // 更新media_file表中url
         if (status.equals("3")) {
             // 更新MediaProcess表状态
-//            mediaProcess.setStatus("3");
-//            mediaProcess.setFailCount(mediaProcess.getFailCount() + 1);
-//            mediaProcess.setErrormsg(errorMsg);
+            mediaProcess.setStatus("3");
+            mediaProcess.setFailCount(mediaProcess.getFailCount() + 1);
+            mediaProcess.setErrormsg(errorMsg);
             mediaProcessMapper.updateById(mediaProcess);
-            LambdaQueryWrapper<MediaProcess> queryWrapper = new LambdaQueryWrapper<>();
-            queryWrapper.eq(MediaProcess::getStatus, "3").eq(MediaProcess::getFailCount, mediaProcess.getFailCount() + 1).eq(MediaProcess::getErrormsg, errorMsg);
-            mediaProcessMapper.update(mediaProcess, queryWrapper);
+//            LambdaUpdateWrapper<MediaProcess> updateWrapper = new LambdaUpdateWrapper<>();
+//            updateWrapper.set(MediaProcess::getStatus, "3").set(MediaProcess::getFailCount, mediaProcess.getFailCount() + 1).set(MediaProcess::getErrormsg, errorMsg);
+//            mediaProcessMapper.update(mediaProcess, updateWrapper);
             return;
         }
         // 任务执行成功

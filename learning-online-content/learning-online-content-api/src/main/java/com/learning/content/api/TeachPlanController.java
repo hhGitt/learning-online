@@ -1,5 +1,6 @@
 package com.learning.content.api;
 
+import com.learning.content.model.dto.BindTeachPlanMediaDto;
 import com.learning.content.model.dto.SaveTeachPlanDto;
 import com.learning.content.model.dto.TeachPlanDto;
 import com.learning.content.model.enums.MoveDirectionEnum;
@@ -52,6 +53,13 @@ public class TeachPlanController {
     @PostMapping("/teachplan/{moveDirection}/{teachPlanId}")
     public void moveTeachPlan(@PathVariable String moveDirection, @PathVariable Long teachPlanId) {
         int step = MoveDirectionEnum.MoveDirectionEnumOf(moveDirection);
-        teachPlanService.moveTeachPlan(step,teachPlanId);
+        teachPlanService.moveTeachPlan(step, teachPlanId);
     }
+
+    @ApiOperation(value = "课程计划和媒资信息绑定")
+    @PostMapping("/teachplan/association/media")
+    public void associationMedia(@RequestBody BindTeachPlanMediaDto bindTeachPlanMediaDto) {
+        teachPlanService.associationMedia(bindTeachPlanMediaDto);
+    }
+
 }

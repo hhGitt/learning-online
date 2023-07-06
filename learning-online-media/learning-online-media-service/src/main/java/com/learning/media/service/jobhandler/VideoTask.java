@@ -37,7 +37,7 @@ public class VideoTask {
     @Autowired
     MediaFileService mediaFileService;
 
-    @Value("${videoprocess.ffmpeg_path}")
+    @Value("${videoprocess.ffmpegpath}")
     String ffmpeg_path;
 
     /**
@@ -86,8 +86,6 @@ public class VideoTask {
                     }
                     // 原avi视频路径
                     String video_path = file.getAbsolutePath();
-                    //转换后mp4文件的名称
-                    String mp4_name = fileId + ".mp4";
                     // 创建临时文件作为转换后文件
                     File mp4File = null;
                     try {
@@ -97,6 +95,8 @@ public class VideoTask {
                         mediaFileProcessService.saveProcessFinishStatus(taskId, "3", fileId, null, "创建临时文件异常");
                         return;
                     }
+                    // 转换后mp4文件的名称
+                    String mp4_name = fileId + ".mp4";
                     // 转换后mp4路径
                     String mp4_path = mp4File.getAbsolutePath();
                     //创建工具类对象
@@ -109,7 +109,7 @@ public class VideoTask {
                         return;
                     }
                     // 上传到minio
-                    boolean b1 = mediaFileService.addMediaFilesToMinIO(mp4_path, "video/mp4", bucket, objectName);
+                    boolean b1 = mediaFileService.addMediaFilesToMinIO(mp4_path, "video/mp4", bucket, getFilePathByMd5(fileId,".mp4"));
                     if (!b1) {
                         log.debug("上传mp4到minio失败,taskId:{}", taskId);
                         mediaFileProcessService.saveProcessFinishStatus(taskId, "3", fileId, null, "上传mp4到minio失败");
