@@ -19,6 +19,13 @@ import java.io.File;
 public interface MediaFileService {
 
     /**
+     * 根据媒资id查询文件信息
+     * @param mediaId id
+     * @return MediaFiles
+     */
+    MediaFiles getFileById(String mediaId);
+
+    /**
      * @param pageParams          分页参数
      * @param queryMediaParamsDto 查询条件
      * @return PageResult
