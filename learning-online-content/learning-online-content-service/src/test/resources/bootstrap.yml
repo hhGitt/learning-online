@@ -7,6 +7,34 @@ spring:
     url: jdbc:mysql://192.168.181.135:3306/learning_content?serverTimezone=UTC&userUnicode=true&useSSL=false&
     username: root
     password: root
+  cloud:
+    nacos:
+      server-addr: 192.168.181.135:8848
+      discovery:
+        namespace: learning_dev
+        group: learning-online-project
+      config:
+        namespace: learning_dev
+        group: learning-online-project
+        file-extension: yaml
+        refresh-enabled: true
+        shared-configs:  # 公共
+          - data-id: feign-${spring.profiles.active}.yaml
+            group: learning-online-common
+            refresh: true
+
 # 日志文件配置路径
 logging:
   config: classpath:log4j2-dev.xml
+xxl:
+  job:
+    admin:
+      addresses: http://192.168.181.135:8088/xxl-job-admin
+    executor:
+      appname: coursepublish-job
+      address:
+      ip:
+      port: 8999
+      logpath: /data/applogs/xxl-job/jobhandler
+      logretentiondays: 30
+    accessToken: default_token

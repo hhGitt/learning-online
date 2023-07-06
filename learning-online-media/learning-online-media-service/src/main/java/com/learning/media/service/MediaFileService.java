@@ -19,6 +19,13 @@ import java.io.File;
 public interface MediaFileService {
 
     /**
+     * 根据媒资id查询文件信息
+     * @param mediaId id
+     * @return MediaFiles
+     */
+    MediaFiles getFileById(String mediaId);
+
+    /**
      * @param pageParams          分页参数
      * @param queryMediaParamsDto 查询条件
      * @return PageResult
@@ -32,9 +39,10 @@ public interface MediaFileService {
      * @param companyId           公司id
      * @param localFilePath       本地文件路径
      * @param uploadFileParamsDto 文件信息
+     * @param objectName 如果传入objectName要按照objectName目录去存储，如果不传按年月日
      * @return 文件上传结果Dto
      */
-    public UploadFileResultDto uploadFile(Long companyId, String localFilePath, UploadFileParamsDto uploadFileParamsDto);
+    public UploadFileResultDto uploadFile(Long companyId, String localFilePath, UploadFileParamsDto uploadFileParamsDto,String objectName);
 
     /**
      * 将文件信息添加到文件表

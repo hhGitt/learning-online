@@ -33,6 +33,9 @@ spring:
           - data-id: freemarker-config-${spring.profiles.active}.yaml
             group: learning-online-common
             refresh: true
+          - data-id: feign-${spring.profiles.active}.yaml
+            group: learning-online-common
+            refresh: true
 #  datasource:
 #    driver-class-name: com.mysql.cj.jdbc.Driver
 #    url: jdbc:mysql://192.168.181.135:3306/learning_content?serverTimezone=UTC&userUnicode=true&useSSL=false&

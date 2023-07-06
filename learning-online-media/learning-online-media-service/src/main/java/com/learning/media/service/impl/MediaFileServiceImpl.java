@@ -6,6 +6,7 @@ import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 import com.learning.base.execption.LearningOnlineException;
 import com.learning.base.model.RestResponse;
+import com.learning.base.utils.StringUtil;
 import com.learning.media.mapper.MediaFilesMapper;
 import com.learning.media.mapper.MediaProcessMapper;
 import com.learning.media.model.dto.UploadFileParamsDto;
@@ -23,6 +24,7 @@ import io.minio.messages.DeleteObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -73,6 +75,12 @@ public class MediaFileServiceImpl implements MediaFileService {
     private String bucket_videofiles;
 
     @Override
+    public MediaFiles getFileById(String mediaId) {
+        MediaFiles mediaFiles = mediaFilesMapper.selectById(mediaId);
+        return mediaFiles;
+    }
+
+    @Override
     public PageResult<MediaFiles> queryMediaFiels(Long companyId, PageParams pageParams, QueryMediaParamsDto queryMediaParamsDto) {
 
         //构建查询条件对象
@@ -93,7 +101,7 @@ public class MediaFileServiceImpl implements MediaFileService {
     }
 
     @Override
-    public UploadFileResultDto uploadFile(Long companyId, String localFilePath, UploadFileParamsDto uploadFileParamsDto) {
+    public UploadFileResultDto uploadFile(Long companyId, String localFilePath, UploadFileParamsDto uploadFileParamsDto, String objectName) {
         // 文件名
         String filename = uploadFileParamsDto.getFilename();
         // 得到拓展名
@@ -103,7 +111,10 @@ public class MediaFileServiceImpl implements MediaFileService {
         String defaultFolderPath = getDefaultFolderPath();
         // 文件md5值
         String fileMd5 = getFileMd5(new File(localFilePath));
-        String objectName = defaultFolderPath + fileMd5 + extension;
+        if (StringUtils.isEmpty(objectName)) {
+            // 默认
+            objectName = defaultFolderPath + fileMd5 + extension;
+        }
         boolean result = addMediaFilesToMinIO(localFilePath, mimeType, bucket_mediafiles, objectName);
         if (!result) {
             throw new LearningOnlineException("上传文件失败");
@@ -293,7 +304,6 @@ public class MediaFileServiceImpl implements MediaFileService {
         } catch (Exception e) {
             e.printStackTrace();
             log.error("上传文件出错，bucket{},objectName:{},错误信息:{}", bucket, objectName, e.getMessage());
-
         }
         return false;
     }

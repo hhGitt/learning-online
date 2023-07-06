@@ -18,3 +18,4 @@ spring:
           - data-id: logging-${spring.profiles.active}.yaml
             group: learning-online-common
             refresh: true
+

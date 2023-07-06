@@ -109,14 +109,14 @@ public class VideoTask {
                         return;
                     }
                     // 上传到minio
-                    boolean b1 = mediaFileService.addMediaFilesToMinIO(mp4_path, "video/mp4", bucket, getFilePathByMd5(fileId,".mp4"));
+                    boolean b1 = mediaFileService.addMediaFilesToMinIO(mp4_path, "video/mp4", bucket, getFilePathByMd5(fileId, ".mp4"));
                     if (!b1) {
                         log.debug("上传mp4到minio失败,taskId:{}", taskId);
                         mediaFileProcessService.saveProcessFinishStatus(taskId, "3", fileId, null, "上传mp4到minio失败");
                         return;
                     }
                     // mp4文件url
-                    String url = getFilePathByMd5(fileId, ".mp4");
+                    String url = "/" + bucket + "/" + getFilePathByMd5(fileId, ".mp4");
                     // 保存任务状态成功
                     mediaFileProcessService.saveProcessFinishStatus(taskId, "2", fileId, url, null);
                 } finally {
