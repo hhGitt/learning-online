@@ -1,12 +1,8 @@
 package com.learning.content.service;
 
 import com.learning.content.model.dto.CoursePreviewDto;
-
-<<<<<<< HEAD
 import java.io.File;
 
-=======
->>>>>>> origin/stu02
 /**
  * @author HH
  * @version 1.0
@@ -22,7 +18,6 @@ public interface CoursePublishService {
      */
     public CoursePreviewDto getCoursePreviewInfo(Long courseId);
 
-<<<<<<< HEAD
     /**
      * 提交审核
      *
@@ -52,8 +47,4 @@ public interface CoursePublishService {
      * @param file 静态化文件
      */
     public void uploadCourseHtml(Long courseId, File file);
-
-
-=======
->>>>>>> origin/stu02
 }

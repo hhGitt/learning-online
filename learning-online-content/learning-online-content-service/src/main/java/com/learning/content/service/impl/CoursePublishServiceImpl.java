@@ -1,6 +1,5 @@
 package com.learning.content.service.impl;
 
-<<<<<<< HEAD
 import com.alibaba.fastjson.JSON;
 import com.learning.base.execption.CommonError;
 import com.learning.base.execption.LearningOnlineException;
@@ -36,7 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-=======
+
 import com.learning.content.model.dto.CourseBaseInfoDto;
 import com.learning.content.model.dto.CoursePreviewDto;
 import com.learning.content.model.dto.TeachPlanDto;
@@ -48,7 +47,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
->>>>>>> origin/stu02
 import java.util.List;
 
 /**
@@ -64,7 +62,6 @@ public class CoursePublishServiceImpl implements CoursePublishService {
     CourseBaseInfoService courseBaseInfoService;
     @Autowired
     TeachPlanService teachPlanService;
-<<<<<<< HEAD
     @Autowired
     CourseTeacherService courseTeacherService;
     @Autowired
@@ -79,8 +76,6 @@ public class CoursePublishServiceImpl implements CoursePublishService {
     MqMessageService mqMessageService;
     @Autowired
     MediaServiceClient mediaServiceClient;
-=======
->>>>>>> origin/stu02
 
     @Override
     public CoursePreviewDto getCoursePreviewInfo(Long courseId) {
@@ -91,7 +86,6 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         // 课程计划信息
         List<TeachPlanDto> teachPlanTree = teachPlanService.findTeachPlanTree(courseId);
         coursePreviewDto.setTeachplans(teachPlanTree);
-<<<<<<< HEAD
         // 课程师资信息
         List<CourseTeacher> courseTeachers = courseTeacherService.queryCourseTeacherList(courseId);
         coursePreviewDto.setCourseTeachers(courseTeachers);
@@ -247,9 +241,4 @@ public class CoursePublishServiceImpl implements CoursePublishService {
             LearningOnlineException.cast(CommonError.UNKOWN_ERROR);
         }
     }
-
-=======
-        return coursePreviewDto;
-    }
->>>>>>> origin/stu02
 }
