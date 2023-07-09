@@ -1,6 +1,11 @@
 package com.learning.content.service.jobhandler;
 
 import com.learning.base.execption.LearningOnlineException;
+import com.learning.content.feginclient.SearchServiceClient;
+import com.learning.content.mapper.CoursePublishMapper;
+import com.learning.content.model.dto.CourseIndex;
+import com.learning.content.model.dto.CoursePreviewDto;
+import com.learning.content.model.po.CoursePublish;
 import com.learning.content.service.CoursePublishService;
 import com.learning.messagesdk.model.po.MqMessage;
 import com.learning.messagesdk.service.MessageProcessAbstract;
@@ -8,6 +13,7 @@ import com.learning.messagesdk.service.MqMessageService;
 import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.handler.annotation.XxlJob;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +31,10 @@ public class CoursePublishTask extends MessageProcessAbstract {
 
     @Autowired
     CoursePublishService coursePublishService;
+    @Autowired
+    SearchServiceClient searchServiceClient;
+    @Autowired
+    CoursePublishMapper coursePublishMapper;
 
     // 任务调度入口
     @XxlJob("CoursePublishJobHandler")
@@ -73,7 +83,7 @@ public class CoursePublishTask extends MessageProcessAbstract {
         }
         // 开始进行课程静态化 html页面
         File file = coursePublishService.generateCourseHtml(courseId);
-        if (file ==null){
+        if (file == null) {
             LearningOnlineException.cast("生成静态页面为空");
         }
         // 将html上传minio
@@ -99,7 +109,13 @@ public class CoursePublishTask extends MessageProcessAbstract {
             return;
         }
         // 查询课程学习，调用搜索服务添加索引
-
+        CoursePublish coursePublish = coursePublishMapper.selectById(courseId);
+        CourseIndex courseIndex = new CourseIndex();
+        BeanUtils.copyProperties(coursePublish, courseIndex);
+        Boolean add = searchServiceClient.add(courseIndex);
+        if (!add){
+            LearningOnlineException.cast("远程调用搜索服务添加课程索引失败");
+        }
         // 任务处理完成写任务状态为已完成
         mqMessageService.completedStageTwo(taskId);
     }

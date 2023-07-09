@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: auth-service
+  cloud:
+    nacos:
+      server-addr: 192.168.181.135:8848
+      discovery:
+        namespace: learning_dev
+        group: learning-online-project
+      config:
+        namespace: learning_dev
+        group: learning-online-project
+        file-extension: yaml
+        refresh-enabled: true
+        shared-configs:
+          - data-id: swagger-${spring.profiles.active}.yaml
+            group: learning-online-common
+            refresh: true
+          - data-id: logging-${spring.profiles.active}.yaml
+            group: learning-online-common
+            refresh: true
+
+  profiles:
+    active: dev

@@ -1,6 +1,7 @@
 ### 查询课程信息
-POST {{gateway_host}}/content/course/list?pageNo=1&pageSize=2
+POST {{content_host}}/content/course/list?pageNo=1&pageSize=2
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsieHVlY2hlbmctcGx1cyJdLCJ1c2VyX25hbWUiOiJ6aGFuZ3NhbiIsInNjb3BlIjpbImFsbCJdLCJleHAiOjE2ODg4OTQyOTMsImF1dGhvcml0aWVzIjpbInAxIl0sImp0aSI6ImEyM2ZkMWQ3LTY1M2YtNDRkYi1hOWZmLTFkYzU3MmFlNTJkNSIsImNsaWVudF9pZCI6IlhjV2ViQXBwIn0.M9-tCNvu_Ui_32yaE9OVkWSZ2o8O-Xb5Pm4JiVSaSok
 
 {
   "auditStatus": "202003",
@@ -60,6 +61,8 @@ Content-Type: application/json
 ### 课程查询
 GET {{content_host}}/content/course/133
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsieHVlY2hlbmctcGx1cyJdLCJ1c2VyX25hbWUiOiJ6aGFuZ3NhbiIsInNjb3BlIjpbImFsbCJdLCJleHAiOjE2ODg4OTQyOTMsImF1dGhvcml0aWVzIjpbInAxIl0sImp0aSI6ImEyM2ZkMWQ3LTY1M2YtNDRkYi1hOWZmLTFkYzU3MmFlNTJkNSIsImNsaWVudF9pZCI6IlhjV2ViQXBwIn0.M9-tCNvu_Ui_32yaE9OVkWSZ2o8O-Xb5Pm4JiVSaSok
+
 
 ### 修改课程
 PUT {{content_host}}/content/course
